@@ -1,7 +1,7 @@
 -- As always, indexes are left as a challenge for the reader -- if it looks like this is slow
 -- enough to warrant the time/effort investment, make a migration for them.
 
-CREATE TABLE mailer_mailing_lists
+CREATE TABLE mailer_lists
     ( id   INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
     , name VARCHAR(128) NOT NULL UNIQUE
     );
@@ -11,9 +11,9 @@ CREATE TABLE mailer_templates
     , name            VARCHAR(128) NOT NULL
     , contents        LONGTEXT NOT NULL
     , markdown        BOOLEAN NOT NULL DEFAULT false
-    , FOREIGN KEY (mailing_list_id) REFERENCES mailer_mailing_lists(id)
+    , FOREIGN KEY (mailing_list_id) REFERENCES mailer_lists(id)
     );
-CREATE TABLE mailer_mail_to_send
+CREATE TABLE mailer_queue
     ( id           INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
     , template_id  INTEGER UNSIGNED NOT NULL
     , data         LONGTEXT NOT NULL -- This is JSON, but Maria's JSON type is just an alias for
@@ -26,9 +26,9 @@ CREATE TABLE mailer_mail_to_send
     , send_done    BOOLEAN NOT NULL DEFAULT false -- Set once sending has completed.
     , FOREIGN KEY (template_id) REFERENCES mailer_templates(id)
     );
-CREATE TABLE mailer_mail_unsubscribes
+CREATE TABLE mailer_unsubscribes
     ( id              INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
     , email           VARCHAR(128) NOT NULL
     , mailing_list_id INTEGER UNSIGNED NOT NULL
-    , FOREIGN KEY (mailing_list_id) REFERENCES mailer_mailing_lists(id)
+    , FOREIGN KEY (mailing_list_id) REFERENCES mailer_lists(id)
     );

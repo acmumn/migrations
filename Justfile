@@ -1,5 +1,7 @@
 migrate:
 	diesel migration run
+revert:
+	diesel migration revert
 reset:
 	@echo "         ABOUT TO NUKE MYSQL"
 	@echo "IF YOU'RE NOT SURE WHERE, ASSUME PROD"
