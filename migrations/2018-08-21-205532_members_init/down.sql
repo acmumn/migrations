@@ -1,3 +1,3 @@
-DROP TABLE jwt_escrow;
-DROP TABLE payment;
-DROP TABLE members;
+DROP TABLE members_jwt_escrow;
+DROP TABLE members_payments;
+DROP TABLE members_members;

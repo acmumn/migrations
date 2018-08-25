@@ -1,4 +1,4 @@
-DROP TABLE mailing_lists;
-DROP TABLE templates;
-DROP TABLE mail_to_send;
-DROP TABLE mail_unsubscribes;
+DROP TABLE mailer_mail_to_send;
+DROP TABLE mailer_mail_unsubscribes;
+DROP TABLE mailer_templates;
+DROP TABLE mailer_mailing_lists;
