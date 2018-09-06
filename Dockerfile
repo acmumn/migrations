@@ -14,6 +14,6 @@ RUN cargo install diesel_cli --no-default-features --features mysql
 
 FROM mariadb:latest
 COPY --chown=mysql:mysql --from=0 /usr/local/cargo/bin/diesel /usr/local/bin/diesel
-COPY --chown=mysql:mysql diesel.sh /docker-entrypoint-initdb.d/diesel.sh
+COPY --chown=mysql:mysql initdb.sh /docker-entrypoint-initdb.d/diesel.sh
 COPY --chown=mysql:mysql Cargo.toml /diesel/
 COPY --chown=mysql:mysql migrations /diesel/migrations/
