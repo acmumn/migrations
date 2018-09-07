@@ -1,0 +1,13 @@
+DROP TABLE identity_jwt_escrow;
+DROP TABLE members_tag_join;
+DROP TABLE members_tags;
+DROP TABLE members_caps;
+DROP TABLE mailer_unsubscribes;
+DROP TABLE mailer_other_subscriptions;
+DROP TABLE mailer_member_subscriptions;
+DROP TABLE mailer_queue;
+DROP TABLE mailer_templates;
+DROP TABLE mailer_lists;
+DROP TABLE members_payments;
+DROP TABLE members_bans;
+DROP TABLE members_members;
