@@ -29,10 +29,6 @@ CREATE TABLE member_payments
     , notes     TEXT
     , FOREIGN KEY (member_id) REFERENCES members(id)
     );
-CREATE TABLE capabilities
-    ( id   INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
-    , name VARCHAR(128) NOT NULL UNIQUE
-    );
 CREATE TABLE tags
     ( id   INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
     , name VARCHAR(128) NOT NULL UNIQUE
@@ -89,15 +85,6 @@ CREATE TABLE mail_unsubscribes
     , FOREIGN KEY (mailing_list_id) REFERENCES mailing_lists(id)
     );
 
-INSERT INTO capabilities (name)
-VALUES ('login'),
-       ('mail.list.manage'),
-       ('mail.templates.manage'),
-       ('mail.send'),
-       ('members.add'),
-       ('members.acmw.add'),
-       ('members.modify'),
-       ('members.acmw.modify');
 INSERT INTO tags (name)
 VALUES ('acmw'),
        ('acmw-officer'),
