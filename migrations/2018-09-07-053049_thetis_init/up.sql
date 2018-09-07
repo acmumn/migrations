@@ -90,7 +90,7 @@ CREATE TABLE mail_unsubscribes
     );
 
 INSERT INTO capabilities (name)
-VALUES ('login')
+VALUES ('login'),
        ('mail.list.manage'),
        ('mail.templates.manage'),
        ('mail.send'),
