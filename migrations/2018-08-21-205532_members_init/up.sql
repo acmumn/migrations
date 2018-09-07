@@ -46,17 +46,17 @@ CREATE TABLE members_jwt_escrow
     );
 
 INSERT INTO members_caps (name)
-VALUES ('mail.list.manage')
-       ('mail.templates.manage')
-       ('mail.send')
-       ('members.add')
-       ('members.acmw.add')
-       ('members.modify')
+VALUES ('mail.list.manage'),
+       ('mail.templates.manage'),
+       ('mail.send'),
+       ('members.add'),
+       ('members.acmw.add'),
+       ('members.modify'),
        ('members.acmw.modify');
 INSERT INTO members_tags (name)
-VALUES ('acmw')
-       ('acmw-officer')
-       ('admin')
-       ('identity-op')
-       ('mailer-op')
+VALUES ('acmw'),
+       ('acmw-officer'),
+       ('admin'),
+       ('identity-op'),
+       ('mailer-op'),
        ('members-op');
