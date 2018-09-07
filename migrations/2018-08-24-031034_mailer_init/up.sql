@@ -36,6 +36,12 @@ CREATE TABLE mailer_other_subscriptions
     , mailing_list_id INTEGER UNSIGNED NOT NULL
     , FOREIGN KEY (mailing_list_id) REFERENCES mailer_lists(id)
     );
+CREATE TABLE mailer_unsubscribes
+    ( id              INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
+    , email           VARCHAR(128) NOT NULL
+    , mailing_list_id INTEGER UNSIGNED NOT NULL
+    , FOREIGN KEY (mailing_list_id) REFERENCES mailer_lists(id)
+    );
 
 INSERT INTO mailer_lists (id, name)
 VALUES (1, 'identity');

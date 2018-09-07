@@ -1,3 +1,4 @@
+DROP TABLE mailer_unsubscribes;
 DROP TABLE mailer_other_subscriptions;
 DROP TABLE mailer_member_subscriptions;
 DROP TABLE mailer_queue;
