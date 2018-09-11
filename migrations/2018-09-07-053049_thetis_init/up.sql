@@ -14,11 +14,16 @@ CREATE TABLE jwt_escrow
     , FOREIGN KEY (member_id) REFERENCES members(id)
     );
 CREATE TABLE member_bans
-    ( id        INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
-    , member_id INTEGER UNSIGNED NOT NULL UNIQUE
-    , date_from DATETIME NOT NULL
-    , date_to   DATETIME
-    , notes     TEXT
+    ( id             INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
+    , member_id      INTEGER UNSIGNED NOT NULL
+    , issued_by      INTEGER UNSIGNED
+    , date_from      DATETIME NOT NULL
+    , date_to        DATETIME
+    , invalidated_at DATETIME
+    , invalidated_by INTEGER UNSIGNED
+    , notes          TEXT
+    , FOREIGN KEY (issued_by) REFERENCES members(id)
+    , FOREIGN KEY (invalidated_by) REFERENCES members(id)
     , FOREIGN KEY (member_id) REFERENCES members(id)
     );
 CREATE TABLE member_payments
@@ -41,16 +46,10 @@ CREATE TABLE members_tag_join
     , FOREIGN KEY (tags_id) REFERENCES tags(id)
     );
 CREATE TABLE mailing_lists
-    ( id   INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
-    , name VARCHAR(128) NOT NULL UNIQUE
-    );
-CREATE TABLE mailing_list_templates
-    ( id              INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
-    , mailing_list_id INTEGER UNSIGNED NOT NULL
-    , name            VARCHAR(128) NOT NULL
-    , contents        LONGTEXT NOT NULL
-    , markdown        BOOLEAN NOT NULL DEFAULT false
-    , FOREIGN KEY (mailing_list_id) REFERENCES mailing_lists(id)
+    ( id      INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
+    , name    VARCHAR(128) NOT NULL UNIQUE
+	, deleted BOOLEAN NOT NULL DEFAULT false
+	, hidden  BOOLEAN NOT NULL DEFAULT false
     );
 CREATE TABLE mail_send_queue
     ( id           INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
@@ -78,22 +77,22 @@ CREATE TABLE mail_other_subscriptions
     , mailing_list_id INTEGER UNSIGNED NOT NULL
     , FOREIGN KEY (mailing_list_id) REFERENCES mailing_lists(id)
     );
-CREATE TABLE mail_unsubscribes
+CREATE TABLE mail_global_unsubscribes
+    ( id    INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
+    , email VARCHAR(128) NOT NULL
+    );
+CREATE TABLE mail_list_unsubscribes
     ( id              INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
     , email           VARCHAR(128) NOT NULL
     , mailing_list_id INTEGER UNSIGNED NOT NULL
     , FOREIGN KEY (mailing_list_id) REFERENCES mailing_lists(id)
     );
+CREATE TABLE templates
+    ( id              INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
+    , name            VARCHAR(128) NOT NULL UNIQUE
+    , contents        LONGTEXT NOT NULL
+    , markdown        BOOLEAN NOT NULL DEFAULT false
+    );
 
-INSERT INTO tags (name)
-VALUES ('acmw'),
-       ('acmw-officer'),
-       ('admin'),
-       ('identity-op'),
-       ('mailer-op'),
-       ('members-op');
-
-INSERT INTO mailing_lists (id, name)
-VALUES (1, 'identity');
-INSERT INTO mailing_list_templates (mailing_list_id, name, contents)
-VALUES (1, 'login', '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></head><body>Click <a href="{{ relative_url(path="/login/" ~ uuid) }}">here</a> to log in.</body></html>');
+INSERT INTO templates (name, contents)
+VALUES ('login', '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></head><body>Click <a href="{{ relative_url(path="/login/" ~ uuid) }}">here</a> to log in.</body></html>');
