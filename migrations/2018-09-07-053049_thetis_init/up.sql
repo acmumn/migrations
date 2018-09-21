@@ -1,10 +1,9 @@
 CREATE TABLE members
-    ( id        INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
-    , name      VARCHAR(128) NOT NULL
-    , studentId CHAR(7) NOT NULL UNIQUE -- A member who does not have a student ID gets "00xxxxx".
-    , x500      VARCHAR(16) UNIQUE
-    , card      CHAR(17) UNIQUE -- The long number on the card.
-    , email     VARCHAR(128) NOT NULL UNIQUE
+    ( id    INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
+    , name  VARCHAR(128) NOT NULL
+    , x500  VARCHAR(16) NOT NULL UNIQUE -- A non-UMN student gets an x500 starting with `!`.
+    , card  CHAR(17) UNIQUE -- The long number on the card.
+    , email VARCHAR(128) NOT NULL UNIQUE
     );
 CREATE TABLE jwt_escrow
     ( id        INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
@@ -21,7 +20,7 @@ CREATE TABLE member_bans
     , date_to        DATETIME
     , invalidated_at DATETIME
     , invalidated_by INTEGER UNSIGNED
-    , notes          TEXT
+    , notes          TEXT NOT NULL
     , FOREIGN KEY (issued_by) REFERENCES members(id)
     , FOREIGN KEY (invalidated_by) REFERENCES members(id)
     , FOREIGN KEY (member_id) REFERENCES members(id)
@@ -31,7 +30,7 @@ CREATE TABLE member_payments
     , member_id INTEGER UNSIGNED NOT NULL UNIQUE
     , date_from DATETIME NOT NULL
     , date_to   DATETIME NOT NULL
-    , notes     TEXT
+    , notes     TEXT NOT NULL
     , FOREIGN KEY (member_id) REFERENCES members(id)
     );
 CREATE TABLE tags
@@ -51,6 +50,12 @@ CREATE TABLE mailing_lists
 	, deleted BOOLEAN NOT NULL DEFAULT false
 	, hidden  BOOLEAN NOT NULL DEFAULT false
     );
+CREATE TABLE mail_templates
+    ( id              INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
+    , name            VARCHAR(128) NOT NULL UNIQUE
+    , contents        LONGTEXT NOT NULL
+    , markdown        BOOLEAN NOT NULL DEFAULT false
+    );
 CREATE TABLE mail_send_queue
     ( id           INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
     , template_id  INTEGER UNSIGNED NOT NULL
@@ -60,9 +65,10 @@ CREATE TABLE mail_send_queue
         -- we don't actually use these.
     , email        VARCHAR(128) NOT NULL
     , subject      VARCHAR(128) NOT NULL
+	, send_after   DATETIME NOT NULL DEFAULT NOW() -- Do not send before this time.
     , send_started BOOLEAN NOT NULL DEFAULT false -- Set once sending has started.
     , send_done    BOOLEAN NOT NULL DEFAULT false -- Set once sending has completed.
-    , FOREIGN KEY (template_id) REFERENCES mailing_list_templates(id)
+    , FOREIGN KEY (template_id) REFERENCES mail_templates(id)
     );
 CREATE TABLE mail_member_subscriptions
     ( id              INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
@@ -87,12 +93,6 @@ CREATE TABLE mail_list_unsubscribes
     , mailing_list_id INTEGER UNSIGNED NOT NULL
     , FOREIGN KEY (mailing_list_id) REFERENCES mailing_lists(id)
     );
-CREATE TABLE templates
-    ( id              INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
-    , name            VARCHAR(128) NOT NULL UNIQUE
-    , contents        LONGTEXT NOT NULL
-    , markdown        BOOLEAN NOT NULL DEFAULT false
-    );
 
-INSERT INTO templates (name, contents)
+INSERT INTO mail_templates (name, contents)
 VALUES ('login', '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></head><body>Click <a href="{{ relative_url(path="/login/" ~ uuid) }}">here</a> to log in.</body></html>');
