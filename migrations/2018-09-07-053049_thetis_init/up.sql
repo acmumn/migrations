@@ -4,7 +4,7 @@ CREATE TABLE members
     , x500      VARCHAR(16) NOT NULL UNIQUE -- A non-UMN student gets an x500 starting with `!`.
     , card      CHAR(17) UNIQUE -- The long number on the card.
     , email     VARCHAR(128) NOT NULL UNIQUE
-	, discordID UNSIGNED BIGINT UNIQUE
+	, discordID BIGINT UNSIGNED UNIQUE
     );
 CREATE TABLE jwt_escrow
     ( id        INTEGER UNSIGNED AUTO_INCREMENT PRIMARY KEY
